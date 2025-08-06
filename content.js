@@ -7,6 +7,7 @@ const RESOURCE_LABELS = ['wood', 'wine', 'marble', 'sulfur', 'crystal'];
   const resourceData = getResourceData();
   displayGoldPerHour();
   displayResourceChanges(resourceData);
+  addQuickTransportButtons(resourceData);
 })();
 
 function getResourceData() {
@@ -94,4 +95,71 @@ function getWineDurationDisplay(wineAmount, wineConsumptionPerHour) {
 
   const roundedDays = remainderHours > 12 ? days + 1 : days;
   return `${roundedDays}d`;
+}
+function addQuickTransportButtons(resourceData) {
+  // Run once in case the modal is already open when script loads
+  const existingModal = document.getElementById('transport');
+  if (existingModal && !existingModal.dataset.quickButtonsInjected) {
+    injectQuickButtons(existingModal, resourceData);
+  }
+
+  const observer = new MutationObserver(() => {
+    const modal = document.getElementById('transport');
+    if (modal && !modal.dataset.quickButtonsInjected) {
+      injectQuickButtons(modal, resourceData);
+    }
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
+function injectQuickButtons(modal, resourceData) {
+  const resourceRows = modal.querySelectorAll('.resourceAssign li');
+
+  resourceRows.forEach((row) => {
+    const input = row.querySelector('input.textfield');
+    if (!input || row.querySelector('.quick-buttons')) return;
+
+    const resourceName = input.id.replace('textfield_', '');
+    const wrapper = createQuickButtonWrapper(input, resourceName, resourceData);
+
+    input.insertAdjacentElement('afterend', wrapper);
+  });
+
+  modal.dataset.quickButtonsInjected = 'true';
+}
+
+function createQuickButtonWrapper(input, resourceName, resourceData) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'quick-buttons';
+
+  const BUTTONS = { '-': -500, '+': 500, '+1K': 1000, '+10K': 10000 };
+
+  Object.entries(BUTTONS).forEach(([label, amount]) => {
+    const button = createQuickButton(label, amount, input, resourceName, resourceData);
+    wrapper.appendChild(button);
+  });
+
+  return wrapper;
+}
+
+function createQuickButton(label, amount, input, resourceName, resourceData) {
+  const button = document.createElement('button');
+  button.textContent = label;
+  button.type = 'button';
+  button.className = 'button action_bubble';
+  button.style.marginLeft = '2px';
+  button.style.padding = '2px 6px';
+  button.style.fontSize = '11px';
+
+  button.onclick = () => {
+    const currentValue = parseFloat(input.value) || 0;
+    const maxValue = resourceData[resourceName].amount;
+    const newValue = Math.min(Math.max(currentValue + amount, 0), maxValue);
+    input.value = newValue;
+    input.focus();
+    input.blur();
+  };
+
+  return button;
 }

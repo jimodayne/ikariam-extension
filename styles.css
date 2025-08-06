@@ -18,3 +18,36 @@
   font-weight: bold;
   line-height: 0;
 }
+
+.quick-buttons button {
+  background: #eee;
+  border: 1px solid #aaa;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.quick-buttons button:hover {
+  background: #ccc;
+}
+#transport #mission .resourceAssign {
+  margin-left: 12px;
+}
+
+#transport #mission #transportGoods .resourceAssign .textfield {
+  left: 400px;
+  width: 56px;
+}
+
+#transport #mission .resourceAssign {
+  width: 100%;
+}
+#transport #mission .resourceAssign .sliderinput {
+  width: 400px;
+  margin-left: 48px;
+}
+
+#transport #mission .resourceAssign .quick-buttons {
+  position: absolute;
+  display: flex;
+  left: 470px;
+  top: 4px;
+}

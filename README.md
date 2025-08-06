@@ -28,11 +28,11 @@ _(Insert a screenshot here if available)_
 
 ## File Structure
 
-ikariam-extension/
-├── manifest.json
-├── content.js
-├── icons.png
-├── styles.css
+- ikariam-extension/
+  - manifest.json
+  - content.js
+  - icons.png
+  - styles.css
 
 ## Notes
 
