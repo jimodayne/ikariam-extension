@@ -1,0 +1,20 @@
+.gold_per_hour {
+  font-size: 9px;
+  /* clear: both; */
+  position: absolute;
+  top: 17px;
+  right: 13px;
+  line-height: normal;
+}
+
+#header #globalResources #js_GlobalMenu_gold {
+  line-height: 22px;
+}
+
+.resource_per_hour {
+  font-size: 10px;
+  display: block;
+  color: darkgreen;
+  font-weight: bold;
+  line-height: 0;
+}
