@@ -1,16 +1,28 @@
 {
   "manifest_version": 3,
   "name": "Ikariam Resource Overlay",
-  "version": "1.0",
-  "description": "Enhances the Ikariam game interface by displaying resource production rates and wine consumption duration.",
+  "version": "1.1",
+  "description": "Enhances the Ikariam game interface by displaying resource production rates, wine consumption duration, and transport helpers.",
   "author": "Your Name",
   "content_scripts": [
     {
-      "matches": ["https://*.ikariam.gameforge.com/*view=city*"],
-      "js": ["content.js"],
+      "matches": ["https://*.ikariam.gameforge.com/*"],
+      "js": [
+        "data/resourceData.js",
+        "data/buildingData.js",
+        "data/worldData.js",
+
+        "dom/displayGold.js",
+        "dom/displayResources.js",
+        "dom/quickTransportButtons.js",
+        "observers/observeTownChanges.js",
+        "utils/index.js",
+
+        "content.js"
+      ],
       "css": ["styles.css"]
     }
   ],
   "default_icon": "icon.png",
-  "permissions": []
+  "permissions": ["storage"]
 }
