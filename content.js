@@ -48,6 +48,7 @@ const RESOURCE_LABELS = ['wood', 'wine', 'marble', 'sulfur', 'crystal'];
         const updatedResourceData = getResourceData();
         displayResourceChanges(updatedResourceData);
         getAllBuildingInfoInTown();
+
         console.log('Town changed, updated resource data');
       }, 300); // debounce delay
     });
@@ -181,28 +182,39 @@ function getWineDurationDisplay(wineAmount, wineConsumptionPerHour) {
   return `${roundedDays}d`;
 }
 function addQuickTransportButtons(resourceData) {
-  // Run once in case the modal is already open when script loads
-  const existingModal = document.getElementById('transport');
-  if (existingModal && !existingModal.dataset.quickButtonsInjected) {
-    injectQuickButtons(existingModal, resourceData);
+  const transportModalElement = document.getElementById('transport');
+  if (transportModalElement) {
+    injectQuickButtons(transportModalElement, resourceData);
   }
-
+  // Run once in case the modal is already open when script loads
+  // if (existingModal && !existingModal.dataset.quickButtonsInjected) {
+  //   injectQuickButtons(existingModal, resourceData);
+  // }
   const observer = new MutationObserver(() => {
     const modal = document.getElementById('transport');
-    if (modal && !modal.dataset.quickButtonsInjected) {
-      injectQuickButtons(modal, resourceData);
+    const quickButtonsElement = document.querySelector('.quick-buttons');
+    if (modal && !quickButtonsElement) {
+      const freshResourceData = getResourceData();
+      console.log('Get freshResourceData', freshResourceData);
+      injectQuickButtons(modal, freshResourceData);
     }
   });
-
   observer.observe(document.body, { childList: true, subtree: true });
 }
 
 function injectQuickButtons(modal, resourceData) {
+  console.log('Injecting quick buttons into transport modal');
   const resourceRows = modal.querySelectorAll('.resourceAssign li');
 
   resourceRows.forEach((row) => {
     const input = row.querySelector('input.textfield');
-    if (!input || row.querySelector('.quick-buttons')) return;
+    const existingWrapper = row.querySelector('.quick-buttons');
+    if (!input) return;
+
+    // Always remove old buttons
+    if (existingWrapper) {
+      existingWrapper.remove();
+    }
 
     const resourceName = input.id.replace('textfield_', '');
     const wrapper = createQuickButtonWrapper(input, resourceName, resourceData);
@@ -213,21 +225,21 @@ function injectQuickButtons(modal, resourceData) {
   modal.dataset.quickButtonsInjected = 'true';
 }
 
-function createQuickButtonWrapper(input, resourceName, resourceData) {
+function createQuickButtonWrapper(input) {
   const wrapper = document.createElement('div');
   wrapper.className = 'quick-buttons';
 
   const BUTTONS = { '-': -500, '+': 500, '+1K': 1000, '+10K': 10000 };
 
   Object.entries(BUTTONS).forEach(([label, amount]) => {
-    const button = createQuickButton(label, amount, input, resourceName, resourceData);
+    const button = createQuickButton(label, amount, input);
     wrapper.appendChild(button);
   });
 
   return wrapper;
 }
 
-function createQuickButton(label, amount, input, resourceName, resourceData) {
+function createQuickButton(label, amount, input) {
   const button = document.createElement('button');
   button.textContent = label;
   button.type = 'button';
@@ -238,8 +250,7 @@ function createQuickButton(label, amount, input, resourceName, resourceData) {
 
   button.onclick = () => {
     const currentValue = parseFloat(input.value) || 0;
-    const maxValue = resourceData[resourceName].amount;
-    const newValue = Math.min(Math.max(currentValue + amount, 0), maxValue);
+    const newValue = Math.max(currentValue + amount, 0);
     input.value = newValue;
     input.focus();
     input.blur();
