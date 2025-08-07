@@ -1,8 +1,8 @@
-function parseFloatUtils(text) {
+export function parseFloatUtils(text) {
   return parseFloat(text.replace(/,/g, '').trim()) || 0;
 }
 
-function formatNumberToDisplay(value) {
+export function formatNumberToDisplay(value) {
   // For example 245000 becomes 245K
   const absValue = Math.abs(value);
   if (absValue >= 1e6) {

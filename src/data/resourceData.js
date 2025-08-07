@@ -1,6 +1,7 @@
-const RESOURCE_LABELS = ['wood', 'wine', 'marble', 'sulfur', 'crystal'];
+import { parseFloatUtils } from '../utils/index.js';
+import { RESOURCE_LABELS } from '../constants/index.js';
 
-function getResourceData() {
+export function getResourceData() {
   const resourceData = {};
 
   // Get gold per hour and current gold

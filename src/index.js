@@ -3,14 +3,14 @@ console.log('Ikariam extension content script loaded');
 
 import { getResourceData } from './data/resourceData.js';
 import { getAllBuildingInfoInTown } from './data/buildingData.js';
-import { displayGoldPerHour } from './dom/displayGold.js';
-import { displayResourceChanges } from './dom/displayResources.js';
-import { addQuickTransportButtons } from './dom/quickTransportButtons.js';
-import { observeTownChanges } from './observers/observeTownChanges.js';
+// import { displayGoldPerHour } from '../dom/displayGold.js';
+// import { displayResourceChanges } from '../dom/displayResources.js';
+// import { addQuickTransportButtons } from '../dom/quickTransportButtons.js';
+// import { observeTownChanges } from '../observers/observeTownChanges.js';
 
 (function modifyGameInterface() {
   const resourceData = getResourceData();
-  // getAllBuildingInfoInTown();
+  getAllBuildingInfoInTown();
   // displayGoldPerHour(resourceData);
   // displayResourceChanges(resourceData);
   // addQuickTransportButtons(resourceData);

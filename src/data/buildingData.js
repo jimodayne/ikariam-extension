@@ -1,4 +1,7 @@
-function getAllBuildingInfoInTown() {
+import { MAP_BUILDING_LABELS } from '../constants/index.js';
+import { displayBuildingLevel } from '../dom/displayBuildingLevel.js';
+
+export function getAllBuildingInfoInTown() {
   const buildings = [];
   const buildingNodes = document.querySelectorAll('#locations .building');
 
@@ -37,13 +40,7 @@ function getAllBuildingInfoInTown() {
       type = classList.find((cls) => cls !== 'building' && !cls.startsWith('position') && !cls.startsWith('level'));
     }
 
-    let overlayElement = node.querySelector('.building-level-overlay');
-    if (!overlayElement) {
-      overlayElement = document.createElement('div');
-      overlayElement.className = 'building-level-overlay';
-      node.appendChild(overlayElement);
-    }
-    overlayElement.textContent = level;
+    displayBuildingLevel(node, level);
 
     buildings.push({
       position,
@@ -57,24 +54,6 @@ function getAllBuildingInfoInTown() {
   return buildings;
 }
 
-function normalizeBuildingName(name) {
-  const map = {
-    'Trading Port': 'port',
-    Shipyard: 'shipyard',
-    'Town Hall': 'townHall',
-    Barracks: 'barracks',
-    Academy: 'academy',
-    Warehouse: 'warehouse',
-    Tavern: 'tavern',
-    Museum: 'museum',
-    Palace: 'palace',
-    Embassy: 'embassy',
-    Workshop: 'workshop',
-    Safehouse: 'safehouse',
-    Carpenter: 'carpenter',
-    "Architect's Office": 'architect',
-    // Add more mappings as needed
-  };
-
-  return map[name] || name.toLowerCase().replace(/\s+/g, '');
+export function normalizeBuildingName(name) {
+  return MAP_BUILDING_LABELS[name] || name.toLowerCase().replace(/\s+/g, '');
 }
