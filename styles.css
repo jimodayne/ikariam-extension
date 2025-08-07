@@ -39,14 +39,15 @@
 
 #transport {
   #mission {
-    .resourceAssign {
-      margin-left: 12px;
-      width: 100%;
-
+    #transportGoods {
       .textfield {
         left: 400px;
         width: 56px;
       }
+    }
+    .resourceAssign {
+      margin-left: 12px;
+      width: 100%;
 
       .sliderinput {
         width: 400px;
@@ -61,4 +62,22 @@
       }
     }
   }
+}
+
+.building-level-overlay {
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  text-align: center;
+  line-height: 28px;
+  top: 28px;
+  right: 12px;
+  border-radius: 50%;
+  background: #006b2983;
+  border: 2px solid #fff;
+  box-shadow: rgba(6, 24, 44, 0.3) 0px 0px 0px 2px, rgba(6, 24, 44, 0.45) 0px 4px 6px -1px,
+    rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+  font-size: 14px;
 }
