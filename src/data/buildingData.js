@@ -1,5 +1,6 @@
 import { MAP_BUILDING_LABELS } from '../constants/index.js';
 import { displayBuildingLevel } from '../dom/displayBuildingLevel.js';
+import { logMessage } from '../utils/index.js';
 
 export function getAllBuildingInfoInTown() {
   const buildings = [];
@@ -50,7 +51,7 @@ export function getAllBuildingInfoInTown() {
     });
   });
 
-  console.log('All buildings in town:', buildings);
+  logMessage('All buildings in town:', buildings);
   return buildings;
 }
 

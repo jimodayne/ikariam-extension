@@ -1,4 +1,4 @@
-function getCurrentTownId() {
+export function getCurrentTownId() {
   const currentCityAnchor = document.querySelector('#js_citySelectContainer .dropDownButton a');
   if (!currentCityAnchor) return null;
 

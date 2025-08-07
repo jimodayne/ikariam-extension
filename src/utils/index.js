@@ -13,3 +13,7 @@ export function formatNumberToDisplay(value) {
   }
   return value.toString();
 }
+
+export function logMessage(...args) {
+  console.log(`[Ikariam Extension]`, ...args);
+}

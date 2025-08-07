@@ -1,9 +1,9 @@
-import { getCurrentTownId } from '../utils/index.js';
+import { getCurrentTownId } from '../data/worldData.js';
 import { getResourceData } from '../data/resourceData.js';
-import { displayResourceChanges } from '../dom/displayGold.js';
+import { displayResourceChanges } from '../dom/displayResources.js';
 import { getAllBuildingInfoInTown } from '../data/buildingData.js';
 
-function observeTownChanges() {
+export function observeTownChanges() {
   // Observe town changes when modal is open (no URL change)
   const locationsContainer = document.getElementById('locations');
   if (locationsContainer) {
