@@ -1,11 +1,33 @@
 // Ikariam extension content script
 console.log('Ikariam extension content script loaded');
 
+// Define type for resource data
+/**
+ * @typedef {Object} ResourceData
+ * @property {number} amount - Current amount of the resource
+ * @property {number} change - Change in the resource amount (per hour)
+ * @property {number} [consumption] - Consumption rate of the resource (only for wine)
+ */
+
+// Create a mock resource data
+const mockResourceData = {
+  gold: { amount: 1000, change: -5050 },
+  wood: { amount: 500, change: 245000, consumption: 0 },
+  wine: { amount: 3000000, change: -1000, consumption: 5 },
+  marble: { amount: 200, change: 185, consumption: 0 },
+  sulfur: { amount: 150, change: 1880, consumption: 0 },
+  crystal: { amount: 1000000, change: 555555, consumption: 0 },
+};
+
 const RESOURCE_LABELS = ['wood', 'wine', 'marble', 'sulfur', 'crystal'];
 
 (function modifyGameInterface() {
   const resourceData = getResourceData();
-  displayGoldPerHour();
+  const buildingData = getAllBuildingInfoInTown();
+  // Uncomment the line below to use mock data for testing
+  // const resourceData = mockResourceData; // Use mock data for testing
+
+  displayGoldPerHour(resourceData);
   displayResourceChanges(resourceData);
   addQuickTransportButtons(resourceData);
 })();
@@ -13,6 +35,14 @@ const RESOURCE_LABELS = ['wood', 'wine', 'marble', 'sulfur', 'crystal'];
 function getResourceData() {
   const resourceData = {};
 
+  // Get gold per hour and current gold
+  const goldElement = document.getElementById('js_GlobalMenu_gold');
+  const goldAmount = goldElement ? parseFloatUtils(goldElement.textContent) : 0;
+  const goldChangeElement = document.getElementById('js_GlobalMenu_gold_Calculation');
+  const goldChange = goldChangeElement ? parseFloatUtils(goldChangeElement.textContent) : 0;
+  resourceData.gold = { amount: goldAmount, change: goldChange };
+
+  // Get resource amounts, changes, and consumption
   RESOURCE_LABELS.forEach((resource) => {
     const amountElement = document.getElementById(`js_GlobalMenu_${resource}`);
     const changeElement =
@@ -34,22 +64,23 @@ function getResourceData() {
   return resourceData;
 }
 
-function displayGoldPerHour() {
-  const goldChangeElement = document.getElementById('js_GlobalMenu_gold_Calculation');
-  if (!goldChangeElement) return;
+function displayGoldPerHour(resourceData) {
+  const goldChange = resourceData.gold.change;
+  const isNegative = goldChange < 0;
 
-  const goldChangeText = goldChangeElement.textContent.trim();
-  if (!goldChangeText) return;
+  const goldChangeElementClass = isNegative ? 'gold_per_hour red' : 'gold_per_hour';
 
-  const isNegative = goldChangeText.startsWith('-');
   const goldDisplay = createDisplayElement(
     'gold_per_hour',
-    `${isNegative ? '' : '+'}${goldChangeText}`,
-    isNegative ? 'gold_per_hour red' : 'gold_per_hour'
+    `${isNegative ? '-' : '+'}${formatNumberToDisplay(Math.abs(goldChange))}`,
+    goldChangeElementClass
   );
 
   const goldMenu = document.getElementById('js_GlobalMenu_gold');
-  if (goldMenu) goldMenu.appendChild(goldDisplay);
+  // Add next to js_GlobalMenu_gold, not inside it
+  if (goldMenu) {
+    goldMenu.insertAdjacentElement('afterend', goldDisplay);
+  }
 }
 
 function displayResourceChanges(resourceData) {
@@ -61,7 +92,11 @@ function displayResourceChanges(resourceData) {
 
     // Display production (positive change)
     if (change > 0) {
-      const productionDisplay = createDisplayElement(`${resource}_per_hour`, `+${change}`, 'resource_per_hour');
+      const productionDisplay = createDisplayElement(
+        `${resource}_per_hour`,
+        `+${formatNumberToDisplay(change)}`,
+        'resource_per_hour'
+      );
       menuElement.appendChild(productionDisplay);
     }
 
@@ -70,7 +105,7 @@ function displayResourceChanges(resourceData) {
       const duration = getWineDurationDisplay(resourceData[resource].amount, consumption);
       const consumptionDisplay = createDisplayElement(
         `${resource}_consumption_per_hour`,
-        `-${consumption} (${duration})`,
+        `-${formatNumberToDisplay(consumption)} (${duration})`,
         'resource_per_hour red'
       );
       menuElement.appendChild(consumptionDisplay);
@@ -91,8 +126,17 @@ function getWineDurationDisplay(wineAmount, wineConsumptionPerHour) {
 
   const totalHours = wineAmount / wineConsumptionPerHour;
   const days = Math.floor(totalHours / 24);
-  const remainderHours = totalHours % 24;
 
+  // If more than 30 days, show in months
+  if (days >= 365) {
+    return `${Math.floor(days / 365)}y`;
+  }
+
+  if (days >= 30) {
+    return `${Math.floor(days / 30)}m`;
+  }
+
+  const remainderHours = totalHours % 24;
   const roundedDays = remainderHours > 12 ? days + 1 : days;
   return `${roundedDays}d`;
 }
@@ -162,4 +206,97 @@ function createQuickButton(label, amount, input, resourceName, resourceData) {
   };
 
   return button;
+}
+
+function parseFloatUtils(text) {
+  return parseFloat(text.replace(/,/g, '').trim()) || 0;
+}
+
+function formatNumberToDisplay(value) {
+  // For example 245000 becomes 245K
+  const absValue = Math.abs(value);
+  if (absValue >= 1e6) {
+    return `${(Math.sign(value) * Math.round(absValue / 1e5)) / 10}M`;
+  }
+  if (absValue >= 1e3) {
+    return `${(Math.sign(value) * Math.round(absValue / 1e2)) / 10}K`;
+  }
+  return value.toString();
+}
+
+function getAllBuildingInfoInTown() {
+  const buildings = [];
+  const buildingNodes = document.querySelectorAll('#locations .building');
+
+  buildingNodes.forEach((node) => {
+    const classList = node.className.split(' ');
+    if (classList.includes('buildingGround')) {
+      // Skip ground buildings
+      return;
+    }
+
+    const positionMatch = node.id.match(/position(\d+)/);
+    const position = positionMatch ? parseInt(positionMatch[1], 10) : null;
+
+    const levelClass = classList.find((cls) => cls.startsWith('level'));
+    const level = levelClass ? parseInt(levelClass.replace('level', '')) : 0;
+
+    let type = null;
+
+    const isUnderConstruction = classList.includes('constructionSite');
+
+    if (isUnderConstruction) {
+      // Get from <a> title or href
+      const link = node.querySelector('a');
+      if (link) {
+        const titleMatch = link.getAttribute('title')?.match(/^(.+?) \(\d+\)$/);
+        const hrefMatch = link.getAttribute('href')?.match(/view=([^&]+)/);
+
+        if (titleMatch) {
+          type = normalizeBuildingName(titleMatch[1]); // e.g. "Trading Port" -> "port"
+        } else if (hrefMatch) {
+          type = hrefMatch[1]; // e.g. "port"
+        }
+      }
+    } else {
+      // Normal case
+      type = classList.find((cls) => cls !== 'building' && !cls.startsWith('position') && !cls.startsWith('level'));
+    }
+
+    buildings.push({
+      position,
+      type,
+      level,
+      isUnderConstruction,
+    });
+  });
+
+  console.log('All buildings in town:', buildings);
+  return buildings;
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function normalizeBuildingName(name) {
+  const map = {
+    'Trading Port': 'port',
+    Shipyard: 'shipyard',
+    'Town Hall': 'townHall',
+    Barracks: 'barracks',
+    Academy: 'academy',
+    Warehouse: 'warehouse',
+    Tavern: 'tavern',
+    Museum: 'museum',
+    Palace: 'palace',
+    Embassy: 'embassy',
+    Workshop: 'workshop',
+    Safehouse: 'safehouse',
+    Carpenter: 'carpenter',
+    "Architect's Office": 'architect',
+    // Add more mappings as needed
+  };
+
+  return map[name] || name.toLowerCase().replace(/\s+/g, '');
 }

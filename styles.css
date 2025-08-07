@@ -1,53 +1,64 @@
-.gold_per_hour {
-  font-size: 9px;
-  /* clear: both; */
-  position: absolute;
-  top: 17px;
-  right: 13px;
-  line-height: normal;
+#header {
+  #globalResources {
+    #js_GlobalMenu_gold {
+      line-height: 22px;
+    }
+  }
 }
 
-#header #globalResources #js_GlobalMenu_gold {
-  line-height: 22px;
+.gold_per_hour {
+  font-size: 9px;
+  line-height: 1;
+  font-weight: bold;
+  position: absolute;
+  right: 4px;
+  color: darkgreen;
+  bottom: 0px;
 }
 
 .resource_per_hour {
-  font-size: 10px;
+  font-size: 9px;
   display: block;
-  color: darkgreen;
   font-weight: bold;
   line-height: 0;
+  color: darkgreen;
 }
 
-.quick-buttons button {
-  background: #eee;
-  border: 1px solid #aaa;
-  cursor: pointer;
-  border-radius: 3px;
-}
-.quick-buttons button:hover {
-  background: #ccc;
-}
-#transport #mission .resourceAssign {
-  margin-left: 12px;
+.quick-buttons {
+  button {
+    background: #eee;
+    border: 1px solid #aaa;
+    cursor: pointer;
+    border-radius: 3px;
+
+    &:hover {
+      background: #ccc;
+    }
+  }
 }
 
-#transport #mission #transportGoods .resourceAssign .textfield {
-  left: 400px;
-  width: 56px;
-}
+#transport {
+  #mission {
+    .resourceAssign {
+      margin-left: 12px;
+      width: 100%;
 
-#transport #mission .resourceAssign {
-  width: 100%;
-}
-#transport #mission .resourceAssign .sliderinput {
-  width: 400px;
-  margin-left: 48px;
-}
+      .textfield {
+        left: 400px;
+        width: 56px;
+      }
 
-#transport #mission .resourceAssign .quick-buttons {
-  position: absolute;
-  display: flex;
-  left: 470px;
-  top: 4px;
+      .sliderinput {
+        width: 400px;
+        margin-left: 48px;
+      }
+
+      .quick-buttons {
+        position: absolute;
+        display: flex;
+        left: 470px;
+        top: 4px;
+      }
+    }
+  }
 }
