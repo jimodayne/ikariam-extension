@@ -1,13 +1,10 @@
-export function addQuickTransportButtons() {
-  const observer = new MutationObserver(() => {
-    const transportModalElement = document.querySelector('#transport_c #transport');
-    const quickButtonsElement = document.querySelector('.quick-buttons');
-    if (transportModalElement && !quickButtonsElement) {
-      injectQuickButtons(transportModalElement);
-    }
-  });
+export function injectTransportDetail() {
+  const transportModalElement = document.querySelector('#transport_c #transport');
+  const quickButtonsElement = document.querySelector('.quick-buttons');
 
-  observer.observe(document.body, { childList: true, subtree: true });
+  if (transportModalElement && !quickButtonsElement) {
+    injectQuickButtons(transportModalElement);
+  }
 }
 
 function injectQuickButtons(modal) {

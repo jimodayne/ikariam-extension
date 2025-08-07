@@ -4,8 +4,8 @@
 import { getResourceData } from './data/resourceData.js';
 import { getAllBuildingInfoInTown } from './data/buildingData.js';
 import { displayResourceChanges, displayGoldPerHour } from './dom/displayResources.js';
-import { addQuickTransportButtons } from './dom/quickTransportButtons.js';
 import { observeTownChanges } from './observers/observeTownChanges.js';
+import { displayBuildingDetail } from './dom/displayBuildingDetail.js';
 import { logMessage } from './utils/index.js';
 
 // Initialize the game interface modifications
@@ -16,6 +16,6 @@ import { logMessage } from './utils/index.js';
   getAllBuildingInfoInTown();
   displayGoldPerHour(resourceData);
   displayResourceChanges(resourceData);
-  addQuickTransportButtons(resourceData);
+  displayBuildingDetail();
   observeTownChanges();
 })();
