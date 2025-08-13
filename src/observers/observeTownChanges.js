@@ -8,7 +8,6 @@ export function observeTownChanges() {
   const locationsContainer = document.getElementById('locations');
   if (locationsContainer) {
     let previousTownId = getCurrentTownId();
-    let debounceTimeout = null;
 
     const observer = new MutationObserver(() => {
       const currentTownId = getCurrentTownId();
@@ -18,8 +17,6 @@ export function observeTownChanges() {
       const updatedResourceData = getResourceData();
       displayResourceChanges(updatedResourceData);
       getAllBuildingInfoInTown();
-
-      console.log('Town changed, updated resource data');
     });
 
     observer.observe(locationsContainer, { childList: true, subtree: true });

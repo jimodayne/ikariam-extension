@@ -2,42 +2,32 @@ import { formatNumberToDisplay } from '../utils/index.js';
 import { RESOURCE_LABELS } from '../constants/index.js';
 
 export function displayResourceChanges(resourceData) {
+  injectResourceChanges(resourceData);
+  injectGoldPerHour(resourceData);
+}
+
+export function injectResourceChanges(resourceData) {
   RESOURCE_LABELS.forEach((resource) => {
     const menuElement = document.getElementById(`resources_${resource}`);
     if (!menuElement) return;
 
-    const { change, consumption } = resourceData[resource];
+    const { production, consumption } = resourceData[resource];
+    const change = production - consumption;
 
-    let productionElement = menuElement.querySelector(`#${resource}_per_hour`);
-    const productionDisplay = `+${formatNumberToDisplay(change)}`;
-    if (change !== 0) {
-      if (!productionElement) {
-        productionElement = createDisplayElement(`${resource}_per_hour`, productionDisplay, 'resource_per_hour');
-        menuElement.appendChild(productionElement);
-      } else {
-        productionElement.textContent = productionDisplay;
-      }
-    } else if (productionElement) {
-      productionElement.remove();
-    }
+    if (change === 0) return;
 
-    if (resource === 'wine') {
-      let consumptionDisplay = menuElement.querySelector(`#${resource}_consumption_per_hour`);
-      if (consumption > 0) {
-        const duration = getWineDurationDisplay(resourceData[resource].amount, consumption);
-        if (!consumptionDisplay) {
-          consumptionDisplay = createDisplayElement(
-            `${resource}_consumption_per_hour`,
-            `-${formatNumberToDisplay(consumption)} (${duration})`,
-            'resource_per_hour red'
-          );
-          menuElement.appendChild(consumptionDisplay);
-        } else {
-          consumptionDisplay.textContent = `-${formatNumberToDisplay(consumption)} (${duration})`;
-        }
-      } else if (consumptionDisplay) {
-        consumptionDisplay.remove();
-      }
+    let changeElement = menuElement.querySelector(`#${resource}_per_hour`);
+    const duration = getWineDurationDisplay(resourceData[resource].amount, consumption);
+    const productionDisplay =
+      change > 0 ? `+${formatNumberToDisplay(change)}` : `${formatNumberToDisplay(change)} (${duration})`;
+    const changeClassName = change > 0 ? 'resource_per_hour' : 'resource_per_hour red';
+
+    if (!changeElement) {
+      changeElement = createDisplayElement(`${resource}_per_hour`, productionDisplay, changeClassName);
+      menuElement.appendChild(changeElement);
+    } else {
+      changeElement.textContent = productionDisplay;
+      changeElement.className = changeClassName;
     }
   });
 }
@@ -62,7 +52,7 @@ export function getWineDurationDisplay(wineAmount, wineConsumptionPerHour) {
   return `${roundedDays}d`;
 }
 
-export function displayGoldPerHour(resourceData) {
+export function injectGoldPerHour(resourceData) {
   const goldChange = resourceData.gold.change;
   const isNegative = goldChange < 0;
 

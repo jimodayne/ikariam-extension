@@ -3,6 +3,7 @@ import { displayBuildingLevel } from '../dom/displayBuildingLevel.js';
 import { logMessage } from '../utils/index.js';
 
 export function getAllBuildingInfoInTown() {
+  logMessage('Getting all building info in town...');
   const buildings = [];
   const buildingNodes = document.querySelectorAll('#locations .building');
 
@@ -51,7 +52,6 @@ export function getAllBuildingInfoInTown() {
     });
   });
 
-  logMessage('All buildings in town:', buildings);
   return buildings;
 }
 

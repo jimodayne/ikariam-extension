@@ -19,7 +19,6 @@ export function injectTownHallDetail() {
 
   const estimateTimeDisplay = formatHoursToDisplay(estimateTimeToMaxInhabitants);
 
-  console.log('estimateTimeDisplay:', estimateTimeDisplay);
   const detailElement = document.createElement('li');
   detailElement.className = 'townhall-detail';
   detailElement.textContent = `ETA: ${estimateTimeDisplay}`;

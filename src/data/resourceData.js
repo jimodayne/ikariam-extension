@@ -1,7 +1,8 @@
-import { parseFloatUtils } from '../utils/index.js';
+import { logMessage, parseFloatUtils } from '../utils/index.js';
 import { RESOURCE_LABELS } from '../constants/index.js';
 
 export function getResourceData() {
+  logMessage('Getting resource data...');
   const resourceData = {};
 
   // Get gold per hour and current gold
@@ -24,11 +25,10 @@ export function getResourceData() {
 
     resourceData[resource] = {
       amount: parseNumber(amountElement),
-      change: parseNumber(changeElement),
+      production: parseNumber(changeElement),
       consumption: parseNumber(consumptionElement),
     };
   });
 
-  console.log('Full resource data:', resourceData);
   return resourceData;
 }

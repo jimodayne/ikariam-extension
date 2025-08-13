@@ -8,7 +8,7 @@
     {
       "matches": ["https://*.ikariam.gameforge.com/*"],
       "js": ["content.bundle.js"],
-      "css": ["styles.css"]
+      "css": ["style.bundle.css"]
     }
   ],
   "default_icon": "icon.png",
