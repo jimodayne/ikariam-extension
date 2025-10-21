@@ -26,6 +26,18 @@ _(Insert a screenshot here if available)_
    - `manifest.json`
    - `content.js`
 
+## Development
+
+To modify or extend the functionality:
+
+1. Start the development server:
+   ```bash
+   npm install
+   npm run start
+   ```
+2. Make changes to `content.js` or other files.
+3. Reload the extension in `chrome://extensions/`.
+
 ## File Structure
 
 - ikariam-extension/

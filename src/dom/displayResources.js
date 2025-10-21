@@ -7,17 +7,22 @@ export function displayResourceChanges(resourceData) {
 }
 
 export function injectResourceChanges(resourceData) {
-  RESOURCE_LABELS.forEach((resource) => {
+  RESOURCE_LABELS.forEach((label) => {
+    let resource = label === 'crystal' ? 'glass' : label;
     const menuElement = document.getElementById(`resources_${resource}`);
     if (!menuElement) return;
 
-    const { production, consumption } = resourceData[resource];
+    const { production, consumption } = resourceData[label];
     const change = production - consumption;
-
-    if (change === 0) return;
-
     let changeElement = menuElement.querySelector(`#${resource}_per_hour`);
-    const duration = getWineDurationDisplay(resourceData[resource].amount, consumption);
+
+    if (change === 0) {
+      // console.log('Element removed:', resource);
+      changeElement?.remove();
+      return;
+    }
+
+    const duration = getWineDurationDisplay(resourceData[label].amount, consumption);
     const productionDisplay =
       change > 0 ? `+${formatNumberToDisplay(change)}` : `${formatNumberToDisplay(change)} (${duration})`;
     const changeClassName = change > 0 ? 'resource_per_hour' : 'resource_per_hour red';

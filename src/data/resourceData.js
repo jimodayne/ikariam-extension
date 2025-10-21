@@ -30,5 +30,6 @@ export function getResourceData() {
     };
   });
 
+  logMessage('Resource Data:', resourceData);
   return resourceData;
 }

@@ -1,4 +1,5 @@
 export function parseFloatUtils(text) {
+  if (!text || typeof text !== 'string') return 0;
   return parseFloat(text.replace(/,/g, '').trim()) || 0;
 }
 

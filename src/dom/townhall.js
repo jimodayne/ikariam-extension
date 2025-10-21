@@ -1,4 +1,4 @@
-import { formatHoursToDisplay } from '../utils/index.js';
+import { formatHoursToDisplay, parseFloatUtils } from '../utils/index.js';
 
 export function injectTownHallDetail() {
   const townhallElement = document.getElementById('townHall');
@@ -8,9 +8,17 @@ export function injectTownHallDetail() {
   if (existingDetail) return; // Avoid duplicate detail injection
 
   const maxInhabitantsElement = document.getElementById('js_TownHallMaxInhabitants');
-  const maxInhabitants = maxInhabitantsElement ? parseInt(maxInhabitantsElement.textContent, 10) : 0;
+
+  const maxInhabitantsText = maxInhabitantsElement ? maxInhabitantsElement.textContent : '0'; // '1,136'
+  const maxInhabitants = parseFloatUtils(maxInhabitantsText);
+
+  console.log('maxInhabitants', maxInhabitants);
+
   const currentInhabitantsElement = document.getElementById('js_TownHallOccupiedSpace');
-  const currentInhabitants = currentInhabitantsElement ? parseInt(currentInhabitantsElement.textContent, 10) : 0;
+  const currentInhabitantsText = currentInhabitantsElement ? currentInhabitantsElement.textContent : '0';
+  const currentInhabitants = parseFloatUtils(currentInhabitantsText);
+
+  console.log('currentInhabitants', currentInhabitants);
 
   const currentGrowthValue = document.getElementById('js_TownHallPopulationGrowthValue');
   const currentGrowth = currentGrowthValue ? parseFloat(currentGrowthValue.textContent) : 0;

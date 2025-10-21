@@ -2,6 +2,7 @@ import { injectTransportDetail } from './transport.js';
 import { injectTownHallDetail } from './townhall.js';
 import { injectFinancesDetail } from './finances.js';
 import { getResourceData } from '../data/resourceData.js';
+import { clickPirateCaptureIfPresent } from '../observers/modPirateFortress.js';
 
 export function injectModalDetail() {
   const observer = new MutationObserver(() => {
@@ -26,6 +27,8 @@ function injectDetail(modal) {
     case 'finances':
       injectFinancesDetail(modal); // Uncomment when finances detail is implemented
       break;
+    case 'pirateFortress':
+      clickPirateCaptureIfPresent();
     default:
       break;
   }

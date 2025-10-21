@@ -2,6 +2,7 @@ import { getCurrentTownId } from '../data/worldData.js';
 import { getResourceData } from '../data/resourceData.js';
 import { displayResourceChanges } from '../dom/displayResources.js';
 import { getAllBuildingInfoInTown } from '../data/buildingData.js';
+import { logMessage } from '../utils/index.js';
 
 export function observeTownChanges() {
   // Observe town changes when modal is open (no URL change)
@@ -13,6 +14,7 @@ export function observeTownChanges() {
       const currentTownId = getCurrentTownId();
       if (!currentTownId || currentTownId === previousTownId) return;
 
+      logMessage('currentTownId', currentTownId, 'previousTownId', previousTownId);
       previousTownId = currentTownId;
       const updatedResourceData = getResourceData();
       displayResourceChanges(updatedResourceData);
