@@ -72,7 +72,7 @@ function mapTextUpgradeToResource(text) {
     'building material': 'wood',
     marble: 'marble',
     sulfur: 'sulfur',
-    crystal: 'crystal',
+    'crystal glass': 'crystal',
     wine: 'wine',
   };
 
