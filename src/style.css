@@ -98,3 +98,13 @@
   } */
   padding-bottom: 75px;
 }
+
+#barbarian_village_total_ships {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.barbarianCityResources {
+  position: relative;
+}

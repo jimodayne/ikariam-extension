@@ -1,6 +1,7 @@
 import { injectTransportDetail } from './transport.js';
 import { injectTownHallDetail } from './townhall.js';
 import { injectFinancesDetail } from './finances.js';
+import { injectBarbarianVillageDetail } from './injectBarbarianVillage.js';
 import { getResourceData } from '../data/resourceData.js';
 import { clickPirateCaptureIfPresent } from '../observers/modPirateFortress.js';
 
@@ -29,6 +30,10 @@ function injectDetail(modal) {
       break;
     case 'pirateFortress':
       clickPirateCaptureIfPresent();
+      break;
+    case 'barbarianVillage':
+      injectBarbarianVillageDetail();
+      break;
     default:
       break;
   }
